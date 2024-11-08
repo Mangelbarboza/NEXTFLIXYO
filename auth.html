@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Autenticación</title>
+    <link rel="stylesheet" href="auth.css">
+
+</head>
+<body>
+    <h2>Autenticación</h2>
+    <form id="auth-form">
+        <input type="text" id="nombre" placeholder="Nombre de usuario" required>
+        <input type="password" id="contrasena" placeholder="Contraseña" required>
+        <button type="button" id="login-btn">Iniciar Sesión</button>
+        <button type="button" id="register-btn">Registrar</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        // Función para registrar un nuevo usuario
+        function registrar() {
+            const nombre = document.getElementById('nombre').value;
+            const contrasena = document.getElementById('contrasena').value;
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nombre, contrasena })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('message').textContent = 'Registro exitoso. Ahora puedes iniciar sesión.';
+                } else {
+                    document.getElementById('message').textContent = 'Error en el registro: ' + data.message;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Función para iniciar sesión
+        function iniciarSesion() {
+            const nombre = document.getElementById('nombre').value;
+            const contrasena = document.getElementById('contrasena').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nombre, contrasena })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('message').textContent = 'Inicio de sesión exitoso';
+                    // Redirigir a la página principal
+                    window.location.href = 'index.html';
+                } else {
+                    document.getElementById('message').textContent = 'Usuario o contraseña incorrectos. ¿No tienes cuenta? Regístrate.';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Asignar eventos a los botones
+        document.getElementById('login-btn').addEventListener('click', iniciarSesion);
+        document.getElementById('register-btn').addEventListener('click', registrar);
+    </script>
+</body>
+</html>

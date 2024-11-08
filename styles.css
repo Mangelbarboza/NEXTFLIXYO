@@ -11,6 +11,7 @@ body {
     color: #ffffff;
 }
 
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -37,6 +38,7 @@ body {
     cursor: pointer;
 }
 
+/* Banner */
 .banner {
     position: relative;
     height: 70vh;
@@ -67,6 +69,7 @@ body {
     cursor: pointer;
 }
 
+/* Recommendations Section */
 .recommendations {
     padding: 20px;
 }
@@ -106,8 +109,35 @@ body {
     height: 225px;
     border-radius: 5px;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
+.movie-card img:hover {
+    transform: scale(1.05);
+}
+
+/* Video Player Page */
+.video-player-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #ffffff;
+}
+
+.video-player-container h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#videoPlayer {
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer */
 .footer {
     background-color: #181818;
     text-align: center;
@@ -119,3 +149,119 @@ body {
 .footer p {
     margin-bottom: 5px;
 }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 20px;
+    }
+
+    .navbar-logo img {
+        width: 80px;
+        margin-bottom: 10px;
+    }
+
+    .banner {
+        height: 50vh;
+    }
+
+    .banner-content h1 {
+        font-size: 2em;
+    }
+
+    .banner-content p {
+        font-size: 1em;
+    }
+
+    .movie-grid {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .movie-card img {
+        width: 120px;
+        height: 180px;
+    }
+
+    .footer {
+        padding: 10px 0;
+    }
+}
+
+/* Hover Effects */
+.navbar-links a:hover,
+.btn-login:hover,
+.btn-primary:hover {
+    opacity: 0.8;
+}
+
+.clicked {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+.sql-query-section {
+    padding: 20px;
+    background-color: #181818;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.sql-query-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.sql-query-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.sql-query-container textarea {
+    width: 80%;
+    max-width: 600px;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.sql-query-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #e50914;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sql-query-container button:hover {
+    background-color: #d40813;
+}
+
+.sql-result {
+    width: 80%;
+    max-width: 600px;
+    min-height: 150px;
+    margin: 20px auto 0;
+    padding: 15px;
+    color: #333;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: monospace;
+    text-align: left;
+    white-space: pre-wrap;
+    overflow-y: auto;
+}
+

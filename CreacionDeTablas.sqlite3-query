@@ -1,0 +1,207 @@
+-- database: ./database.sqlite
+-- Base de datos: ./database.sqlite
+-- Crear tablas independientes primero
+
+-- Tabla Plan
+CREATE TABLE IF NOT EXISTS Plan (
+    ID INTEGER PRIMARY KEY,
+    Nombre TEXT,
+    Tipo TEXT,
+    Resolucion TEXT,
+    Precio REAL,
+    Cantidad_Dispositivos INTEGER,
+    Descargas INTEGER
+);
+
+-- Tabla Cuenta
+CREATE TABLE IF NOT EXISTS Cuenta (
+    ID INTEGER PRIMARY KEY,
+    Nombre TEXT,
+    Apellido TEXT,
+    Email TEXT,
+    ID_Plan INTEGER,
+    Fecha_Registro DATE,
+    FOREIGN KEY (ID_Plan) REFERENCES Plan(ID)
+);
+
+-- Tabla Pelicula
+CREATE TABLE IF NOT EXISTS Pelicula (
+    ID INTEGER PRIMARY KEY,
+    ID_Director INTEGER,
+    Sinopsis TEXT,
+    Lanzamiento DATE,
+    Duracion INTEGER,
+    Genero TEXT,
+    Nombre TEXT
+);
+
+-- Tabla Director
+CREATE TABLE IF NOT EXISTS Director (
+    ID INTEGER PRIMARY KEY,
+    Nombre TEXT
+);
+
+-- Tabla Perfil
+CREATE TABLE IF NOT EXISTS Perfil (
+    Nombre TEXT,
+    ID_Cuenta INTEGER,
+    Edad INTEGER,
+    Tipo_Perfil TEXT,
+    PRIMARY KEY (Nombre, ID_Cuenta),
+    FOREIGN KEY (ID_Cuenta) REFERENCES Cuenta(ID)
+);
+
+CREATE TABLE IF NOT EXISTS Usuarios (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nombre TEXT NOT NULL UNIQUE,
+    Contrasena TEXT NOT NULL
+);
+
+
+-- Crear tablas dependientes después
+
+-- Tabla Calificación
+CREATE TABLE IF NOT EXISTS Calificacion (
+    ID INTEGER PRIMARY KEY,
+    Valor INTEGER,
+    Comentario TEXT,
+    ID_Pelicula INTEGER,
+    ID_Perfil TEXT,
+    ID_Cuenta INTEGER,
+    Fecha DATE,
+    FOREIGN KEY (ID_Pelicula) REFERENCES Pelicula(ID),
+    FOREIGN KEY (ID_Perfil, ID_Cuenta) REFERENCES Perfil(Nombre, ID_Cuenta)
+);
+
+-- Tabla Recomienda
+CREATE TABLE IF NOT EXISTS Recomienda (
+    ID_recomienda INTEGER,
+    ID_recomendada INTEGER,
+    PRIMARY KEY (ID_recomienda, ID_recomendada),
+    FOREIGN KEY (ID_recomienda) REFERENCES Pelicula(ID),
+    FOREIGN KEY (ID_recomendada) REFERENCES Pelicula(ID)
+);
+
+-- Tabla Ver
+CREATE TABLE IF NOT EXISTS Ver (
+    Fecha_visualizacion DATE,
+    Nombre TEXT,
+    Nombre_Perfil TEXT,
+    ID_Cuenta INTEGER,
+    ID_Pelicula INTEGER,
+    PRIMARY KEY (Fecha_visualizacion, ID_Cuenta, ID_Pelicula),
+    FOREIGN KEY (Nombre_Perfil, ID_Cuenta) REFERENCES Perfil(Nombre, ID_Cuenta),
+    FOREIGN KEY (ID_Pelicula) REFERENCES Pelicula(ID)
+);
+
+-- Tabla Plan_estandar (especialización de Plan)
+CREATE TABLE IF NOT EXISTS Plan_estandar (
+    ID INTEGER PRIMARY KEY,
+    Miembros_extra INTEGER,
+    FOREIGN KEY (ID) REFERENCES Plan(ID)
+);
+
+-- Tabla Plan_premium (especialización de Plan)
+CREATE TABLE IF NOT EXISTS Plan_premium (
+    ID INTEGER PRIMARY KEY,
+    Miembros_extra INTEGER,
+    Audio_espacial BOOLEAN,
+    FOREIGN KEY (ID) REFERENCES Plan(ID)
+);
+
+-- Tabla Guardar
+CREATE TABLE IF NOT EXISTS Guardar (
+    ID_Pelicula INTEGER,
+    Nombre_Perfil TEXT,
+    ID_Cuenta INTEGER,
+    PRIMARY KEY (ID_Pelicula, Nombre_Perfil, ID_Cuenta),
+    FOREIGN KEY (ID_Pelicula) REFERENCES Pelicula(ID),
+    FOREIGN KEY (Nombre_Perfil, ID_Cuenta) REFERENCES Perfil(Nombre, ID_Cuenta)
+);
+
+-- Insertar datos en la tabla Plan
+INSERT INTO Plan (ID, Nombre, Tipo, Resolucion, Precio, Cantidad_Dispositivos, Descargas) VALUES
+(1, 'Básico', 'Estandar', '480p', 99.99, 1, 0),
+(2, 'Estándar', 'Estandar', '1080p', 149.99, 2, 2),
+(3, 'Premium', 'Premium', '4K', 199.99, 4, 5),
+(4, 'Ultra HD', 'Premium', '4K HDR', 249.99, 5, 10),
+(5, 'Familiar', 'Estandar', '1080p', 159.99, 3, 3);
+
+-- Insertar datos en la tabla Cuenta
+INSERT INTO Cuenta (ID, Nombre, Apellido, Email, ID_Plan, Fecha_Registro) VALUES
+(1, 'Juan', 'Perez', 'juan@example.com', 1, '2023-01-01'),
+(2, 'Maria', 'Lopez', 'maria@example.com', 2, '2023-02-01'),
+(3, 'Carlos', 'Ramirez', 'carlos@example.com', 3, '2023-03-01'),
+(4, 'Ana', 'Garcia', 'ana@example.com', 4, '2023-04-01'),
+(5, 'Luis', 'Hernandez', 'luis@example.com', 5, '2023-05-01');
+
+-- Insertar datos en la tabla Director
+INSERT INTO Director (ID, Nombre) VALUES
+(1, 'Pedro Almodóvar'),
+(2, 'Sofia Coppola'),
+(3, 'Christopher Nolan'),
+(4, 'Quentin Tarantino'),
+(5, 'Guillermo del Toro');
+
+-- Insertar datos en la tabla Pelicula
+INSERT INTO Pelicula (ID, ID_Director, Sinopsis, Lanzamiento, Duracion, Genero, Nombre) VALUES
+(1, 1, 'Película de acción', '2022-01-01', 120, 'Acción', 'Acción Total'),
+(2, 2, 'Película de comedia', '2022-02-01', 90, 'Comedia', 'Ríe sin parar'),
+(3, 3, 'Película de drama', '2022-03-01', 150, 'Drama', 'Lágrimas de fuego'),
+(4, 4, 'Película de terror', '2022-04-01', 100, 'Terror', 'La noche oscura'),
+(5, 5, 'Película de ciencia ficción', '2022-05-01', 130, 'Ciencia Ficción', 'El futuro es ahora');
+
+-- Insertar datos en la tabla Perfil
+INSERT INTO Perfil (Nombre, ID_Cuenta, Edad, Tipo_Perfil) VALUES
+('Perfil1', 1, 25, 'Adulto'),
+('Perfil2', 2, 10, 'Niño'),
+('Perfil3', 3, 20, 'Adulto'),
+('Perfil4', 4, 35, 'Niño'),
+('Perfil5', 5, 40, 'Adulto');
+
+-- Insertar datos en la tabla Calificación (incluyendo ID_Cuenta)
+INSERT INTO Calificacion (ID, Valor, Comentario, ID_Pelicula, ID_Perfil, ID_Cuenta, Fecha) VALUES
+(1, 5, 'Excelente', 1, 'Perfil1', 1, '2023-06-01'),
+(2, 4, 'Muy buena', 2, 'Perfil2', 2, '2023-06-02'),
+(3, 3, 'Regular', 3, 'Perfil3', 3, '2023-06-03'),
+(4, 2, 'No me gustó', 4, 'Perfil4', 4, '2023-06-04'),
+(5, 1, 'Mala', 5, 'Perfil5', 5, '2023-06-05');
+
+-- Insertar datos en la tabla Recomienda
+INSERT INTO Recomienda (ID_recomienda, ID_recomendada) VALUES
+(1, 2),
+(2, 3),
+(3, 4),
+(4, 5),
+(5, 1);
+
+-- Insertar datos en la tabla Ver (incluyendo ID_Cuenta)
+INSERT INTO Ver (Fecha_visualizacion, Nombre, Nombre_Perfil, ID_Cuenta, ID_Pelicula) VALUES
+('2023-07-01', 'Juan', 'Perfil1', 1, 1),
+('2023-07-02', 'Maria', 'Perfil2', 2, 2),
+('2023-07-03', 'Carlos', 'Perfil3', 3, 3),
+('2023-07-04', 'Ana', 'Perfil4', 4, 4),
+('2023-07-05', 'Luis', 'Perfil5', 5, 5);
+
+-- Insertar datos en la tabla Plan_estandar
+INSERT INTO Plan_estandar (ID, Miembros_extra) VALUES
+(1, 1),
+(2, 2),
+(4, 3),
+(5, 4);
+
+-- Insertar datos en la tabla Plan_premium
+INSERT INTO Plan_premium (ID, Miembros_extra, Audio_espacial) VALUES
+(3, 2, 1),
+(4, 3, 1),
+(5, 4, 1);
+
+-- Insertar datos en la tabla Guardar (incluyendo ID_Cuenta)
+INSERT INTO Guardar (ID_Pelicula, Nombre_Perfil, ID_Cuenta) VALUES
+(1, 'Perfil1', 1),
+(2, 'Perfil2', 2),
+(3, 'Perfil3', 3),
+(4, 'Perfil4', 4),
+(5, 'Perfil5', 5);
+
+
